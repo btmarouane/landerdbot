@@ -34,4 +34,5 @@ chmod 644 /etc/systemd/system/twitterbot.service
 cp twitterbot.sh /usr/local/bin/twitterbot
 chmod +x /usr/local/bin/twitterbot
 # Run the Python script
+systemctl daemon-reload
 twitterbot start
