@@ -1,0 +1,12 @@
+[Unit]
+Description=Landerd Bot
+After=network.target
+
+[Service]
+Type=idle
+Restart=on-failure
+User=root
+ExecStart=/bin/bash -c 'cd /opt/landerdbot/ && source bot-venv/bin/activate && python3 twitterbot.pyc'
+
+[Install]
+WantedBy=multi-user.target
