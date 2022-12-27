@@ -24,8 +24,11 @@ config.read("twitterbot.properties")
 # Extract the variables from the properties file
 TELEGRAM_CHAT_ID = config["DEFAULT"]["TELEGRAM_CHAT_ID"]
 KEYWORDS = config["DEFAULT"]["KEYWORD"]
-KEYWORDS = KEYWORDS.replace(' ', '').split(',')
+KEYWORDS = KEYWORDS.split(',')
+KEYWORDS = [KEYWORD.strip() for KEYWORD in KEYWORDS if len(KEYWORD) > 0]
 
+print(KEYWORDS)
+quit()
 # Authenticate with Twitter API
 auth = tweepy.OAuth1UserHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN,
                                 TWITTER_ACCESS_TOKEN_SECRET)
