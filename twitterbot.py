@@ -23,7 +23,9 @@ config.read("twitterbot.properties")
 
 # Extract the variables from the properties file
 TELEGRAM_CHAT_ID = config["DEFAULT"]["TELEGRAM_CHAT_ID"]
-KEYWORD = config["DEFAULT"]["KEYWORD"]
+KEYWORDS = config["DEFAULT"]["KEYWORD"]
+KEYWORDS = KEYWORDS.replace(' ', '').split(',')
+
 # Authenticate with Twitter API
 auth = tweepy.OAuth1UserHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN,
                                 TWITTER_ACCESS_TOKEN_SECRET)
@@ -64,10 +66,15 @@ while True:
                         tweet_screen_name = like.user.screen_name
                         tweet_text = like.full_text
                         tweet_preview_url = f"https://twitter.com/twitter/statuses/{like.id}"
-                    if re.search(KEYWORD, tweet_text, re.IGNORECASE):
-                        # Send a notification to Telegram
-                        message = f"{user} liked a tweet containing Keyword {KEYWORD}. Url : {tweet_preview_url}"
-                        bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message)
+
+                        found_keywords = set()
+                        for KEY in KEYWORDS:
+                            if re.search(KEY, tweet_text, re.IGNORECASE):
+                                found_keywords.add(KEY)
+
+                        if len(found_keywords) > 0:
+                            message = f"{user} liked a tweet containing Keywords : {', '.join(found_keywords)}. Url : {tweet_preview_url}"
+                            bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message)
             time.sleep(13)
         except Exception as e:
             print(f"'{user}' failed with error '{e}'")
